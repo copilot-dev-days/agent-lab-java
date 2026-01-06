@@ -1,4 +1,4 @@
-# Soc Ops — A VS Code Agent Lab (1hr) - C# Edition
+# Soc Ops — A VS Code Agent Lab (1hr)
 
 Harald Kirschner `@digitarald`
 — VS Code Team `@code`
@@ -12,8 +12,6 @@ Harald Kirschner `@digitarald`
 - [ ] Chat open and Agent ready for action
 
 *Optional*: Use DevContainer or WSL.
-
-> **Note**: This is the C# .NET 10 Blazor WebAssembly edition of the workshop. The original uses React + TypeScript.
 
 ## Setup
 

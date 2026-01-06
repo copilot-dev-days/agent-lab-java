@@ -1,7 +1,6 @@
 {
   "recommendations": [
-    "vitest.explorer",
-    "dbaeumer.vscode-eslint",
-    "bradlc.vscode-tailwindcss"
+    "ms-dotnettools.csdevkit",
+    "ms-dotnettools.csharp"
   ]
 }
