@@ -77,11 +77,11 @@ Result: All future requests will have basic map of the workspace.
 
 Result: Agents completed adjusted the rules, fixed errors, and all edits are merged back into main. Stricter linting rules will catch any human/agent mistakes earlier.
 
-### Task: Check Tailwind 4 instructions
+### Task: Check CSS Utilities instructions
 
-**TL;DR**: Tailwind v4 instructions close gaps from training data and document the latest best practices.
+**TL;DR**: CSS utility instructions document the custom Tailwind-like classes available in this Blazor project.
 
-See prompt in the footer.
+See `.github/instructions/css-utilities.instructions.md`.
 
 **Optional**, if interested how it works: Delete main text and re-run the prompt
 
@@ -137,7 +137,7 @@ Ideas:
 - Bold Serif Vintage
 - Toybox Primary Colors
 
-Result: Frontend and tailwind instructions are use to build a beautiful design.
+Result: Frontend and CSS utility instructions are used to build a beautiful design.
 
 ### Task: Keep instructions updated
 
