@@ -1,0 +1,162 @@
+@using SocOps.Data
+
+<div class="flex flex-col min-h-full">
+    <!-- Header -->
+    <header class="flex items-center justify-between p-3 bg-card border-b border-cyan">
+        <button
+            @onclick="OnBack"
+            class="text-cyan text-sm px-3 py-1.5 rounded border border-cyan transition-all hover:shadow-neon">
+            ← EXIT
+        </button>
+        <h1 class="font-bold text-cyan font-display tracking-wider neon-text">CARD DECK</h1>
+        <button
+            @onclick="DrawNewCard"
+            class="text-magenta text-sm px-3 py-1.5 rounded border border-magenta transition-all hover:shadow-neon">
+            SHUFFLE
+        </button>
+    </header>
+
+    <!-- Card Area -->
+    <div class="flex-1 flex items-center justify-center p-6">
+        <div class="relative w-full max-w-sm">
+            <!-- Card -->
+            <div class="@GetCardClasses()">
+                <div class="absolute inset-0 bg-card rounded-2xl neon-border transform transition-all duration-500 @(IsFlipped ? "rotate-y-180 opacity-0" : "")">
+                    <!-- Card Back -->
+                    <div class="h-full flex flex-col items-center justify-center p-6">
+                        <div class="text-6xl mb-4">🎴</div>
+                        <p class="text-cyan font-display uppercase tracking-wider">TAP TO REVEAL</p>
+                    </div>
+                </div>
+                
+                <div class="absolute inset-0 bg-card rounded-2xl @(IsFlipped ? "neon-border-pink" : "opacity-0") transform transition-all duration-500 @(IsFlipped ? "" : "-rotate-y-180")">
+                    <!-- Card Front -->
+                    <div class="h-full flex flex-col items-center justify-center p-6 text-center">
+                        <p class="text-2xl font-semibold text-white mb-8 leading-relaxed">
+                            @CurrentQuestion
+                        </p>
+                        <p class="text-sm text-gray-500 font-display uppercase">
+                            Find someone who...
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tap instruction -->
+            @if (!IsFlipped)
+            {
+                <button @onclick="FlipCard" class="absolute inset-0 z-10"></button>
+            }
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    @if (IsFlipped)
+    {
+        <div class="p-4 flex gap-4">
+            <button
+                @onclick="() => HandleResult(false)"
+                class="flex-1 py-4 bg-card border border-magenta rounded-lg text-magenta font-display uppercase tracking-wider transition-all hover:shadow-neon hover:neon-border-pink">
+                ✗ NO MATCH
+            </button>
+            <button
+                @onclick="() => HandleResult(true)"
+                class="flex-1 py-4 bg-card border border-cyan rounded-lg text-cyan font-display uppercase tracking-wider transition-all hover:shadow-neon hover:neon-border">
+                ✓ FOUND ONE
+            </button>
+        </div>
+    }
+
+    <!-- Stats -->
+    <div class="p-4 bg-card border-t border-cyan">
+        <div class="flex justify-around text-center">
+            <div>
+                <div class="text-2xl font-bold text-cyan neon-text">@MatchCount</div>
+                <div class="text-xs text-gray-500 font-display uppercase">Matches</div>
+            </div>
+            <div>
+                <div class="text-2xl font-bold text-magenta neon-text-pink">@SkipCount</div>
+                <div class="text-xs text-gray-500 font-display uppercase">Skipped</div>
+            </div>
+            <div>
+                <div class="text-2xl font-bold text-white">@CardsRemaining</div>
+                <div class="text-xs text-gray-500 font-display uppercase">Remaining</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnBack { get; set; }
+
+    private List<string> Deck = new();
+    private int CurrentIndex = 0;
+    private bool IsFlipped = false;
+    private int MatchCount = 0;
+    private int SkipCount = 0;
+
+    private string CurrentQuestion => CurrentIndex < Deck.Count ? Deck[CurrentIndex] : "All done!";
+    private int CardsRemaining => Math.Max(0, Deck.Count - CurrentIndex);
+
+    protected override void OnInitialized()
+    {
+        ShuffleDeck();
+        // Auto-flip the first card
+        IsFlipped = true;
+    }
+
+    private void ShuffleDeck()
+    {
+        var random = new Random();
+        Deck = Questions.QuestionsList.OrderBy(_ => random.Next()).ToList();
+        CurrentIndex = 0;
+        IsFlipped = true;
+    }
+
+    private void FlipCard()
+    {
+        IsFlipped = true;
+    }
+
+    private void DrawNewCard()
+    {
+        ShuffleDeck();
+        MatchCount = 0;
+        SkipCount = 0;
+    }
+
+    private void HandleResult(bool isMatch)
+    {
+        if (isMatch)
+            MatchCount++;
+        else
+            SkipCount++;
+
+        CurrentIndex++;
+        
+        if (CurrentIndex < Deck.Count)
+        {
+            IsFlipped = true; // Auto-flip next card
+        }
+    }
+
+    private string GetCardClasses()
+    {
+        return "relative w-full aspect-[3/4] perspective-1000";
+    }
+}
+
+<style>
+    .perspective-1000 {
+        perspective: 1000px;
+    }
+    
+    .rotate-y-180 {
+        transform: rotateY(180deg);
+    }
+    
+    .-rotate-y-180 {
+        transform: rotateY(-180deg);
+    }
+</style>
