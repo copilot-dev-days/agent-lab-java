@@ -8,7 +8,7 @@ Harald Kirschner `@digitarald`
 - [ ] Latest VS Code **v1.107** (no update pending)
 - [ ] Signed in with GitHub
   - Copilot Free can not run cloud agent!
-- [ ] Git & Node installed
+- [ ] Git & .NET 10 SDK installed
 - [ ] Chat open and Agent ready for action
 
 *Optional*: Use DevContainer or WSL.
@@ -16,8 +16,8 @@ Harald Kirschner `@digitarald`
 ## Setup
 
 
-1. Open https://github.com/microsoft/vscode-agent-lab-soc-ops
-   1. *Use this template* > *Create a new repository* (pick `my-soc-ops`, make it *Public*)
+1. Open https://github.com/jamesmontemagno/vscode-agent-lab-soc-ops-csharp
+   1. *Use this template* > *Create a new repository* (pick `my-soc-ops-csharp`, make it *Public*)
       - ✅ Your own *soc-ops* GitHub repo is ready
    2. ⚠️ Enable *Settings* > *Pages* > *Deploy from a branch* to *GitHub Actions*
       - ✅ Any commit to the repo will publish the game as GitHub page: `http://{your-gh-username}.github.io/{my-soc-ops}`
@@ -77,11 +77,11 @@ Result: All future requests will have basic map of the workspace.
 
 Result: Agents completed adjusted the rules, fixed errors, and all edits are merged back into main. Stricter linting rules will catch any human/agent mistakes earlier.
 
-### Task: Check Tailwind 4 instructions
+### Task: Check CSS Utilities instructions
 
-**TL;DR**: Tailwind v4 instructions close gaps from training data and document the latest best practices.
+**TL;DR**: CSS utility instructions document the custom Tailwind-like classes available in this Blazor project.
 
-See prompt in the footer.
+See `.github/instructions/css-utilities.instructions.md`.
 
 **Optional**, if interested how it works: Delete main text and re-run the prompt
 
@@ -137,7 +137,7 @@ Ideas:
 - Bold Serif Vintage
 - Toybox Primary Colors
 
-Result: Frontend and tailwind instructions are use to build a beautiful design.
+Result: Frontend and CSS utility instructions are used to build a beautiful design.
 
 ### Task: Keep instructions updated
 

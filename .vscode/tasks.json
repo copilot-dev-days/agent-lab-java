@@ -2,9 +2,9 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "npm: dev",
+			"label": "dotnet: run",
 			"type": "shell",
-			"command": "npm run dev",
+			"command": "dotnet run --project SocOps/SocOps.csproj",
 			"isBackground": true,
 			"problemMatcher": {
 				"pattern": {
@@ -12,8 +12,8 @@
 				},
 				"background": {
 					"activeOnStart": true,
-					"beginsPattern": "^.*VITE v\\d+\\.\\d+\\.\\d+.*",
-					"endsPattern": "^.*ready in.*"
+					"beginsPattern": "^.*Building.*",
+					"endsPattern": "^.*Application started.*"
 				}
 			},
 			"presentation": {
@@ -23,6 +23,13 @@
 				"kind": "build",
 				"isDefault": true
 			}
+		},
+		{
+			"label": "dotnet: build",
+			"type": "shell",
+			"command": "dotnet build SocOps/SocOps.csproj",
+			"group": "build",
+			"problemMatcher": "$msCompile"
 		}
 	]
 }

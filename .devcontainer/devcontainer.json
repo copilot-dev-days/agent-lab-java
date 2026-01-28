@@ -1,26 +1,25 @@
 {
-  "name": "Soc-Ops React TypeScript",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+  "name": "Soc-Ops Blazor C#",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:10.0",
   "customizations": {
     "vscode": {
       "extensions": [
-        "vitest.explorer",
-        "dbaeumer.vscode-eslint",
-        "bradlc.vscode-tailwindcss"
+        "ms-dotnettools.csdevkit",
+        "ms-dotnettools.csharp"
       ]
     },
     "codespaces": {
       "openFiles": [
-        "src/App.tsx",
+        "SocOps/Pages/Home.razor",
         "README.md"
       ]
     }
   },
-  "postCreateCommand": "npm install",
-  "forwardPorts": [5173],
+  "postCreateCommand": "dotnet restore SocOps/SocOps.csproj",
+  "forwardPorts": [5166],
   "portsAttributes": {
-    "5173": {
-      "label": "Vite Dev Server",
+    "5166": {
+      "label": "Blazor Dev Server",
       "onAutoForward": "openPreview"
     }
   }

@@ -5,12 +5,10 @@
     "setup": "resourceFilename == 'README.md'"
   },
   "chat.tools.terminal.autoApprove": {
-    "npm run lint": true,
-    "npm run dev": true,
-    "npm run build": true,
-    "npm test": true,
-    "npm install": true,
-    "npx eslint": true
+    "dotnet build": true,
+    "dotnet run": true,
+    "dotnet test": true,
+    "dotnet restore": true
   },
   "github.copilot.chat.githubMcpServer.enabled": true,
   "github.copilot.chat.githubMcpServer.toolsets": [
