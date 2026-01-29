@@ -554,6 +554,113 @@
             });
         }
 
+        // Konami Code Easter Egg: ↑↑↓↓←→←→BA
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    konamiIndex = 0;
+                    triggerEpicExplosion();
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        // Epic emoji explosion!
+        function triggerEpicExplosion() {
+            const emojis = ['🚀', '⭐', '🎮', '💜', '🔥', '✨', '🎯', '💻', '🤖', '🧠', '🎨', '🏆', '👾', '🌟', '💎', '🦄'];
+            
+            // Screen flash
+            const flash = document.createElement('div');
+            flash.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: linear-gradient(135deg, #00f5ff, #ff00ff);
+                z-index: 9999;
+                animation: flashBang 0.5s ease-out forwards;
+            `;
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 500);
+
+            // Add flash animation
+            if (!document.getElementById('konami-styles')) {
+                const style = document.createElement('style');
+                style.id = 'konami-styles';
+                style.textContent = `
+                    @keyframes flashBang {
+                        0% { opacity: 1; }
+                        100% { opacity: 0; }
+                    }
+                    @keyframes emojiExplode {
+                        0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 1; }
+                        50% { opacity: 1; }
+                        100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(var(--rot)); opacity: 0; }
+                    }
+                    @keyframes epicShake {
+                        0%, 100% { transform: translateX(0); }
+                        10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+                        20%, 40%, 60%, 80% { transform: translateX(10px); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // Shake the page
+            document.body.style.animation = 'epicShake 0.5s ease-in-out';
+            setTimeout(() => document.body.style.animation = '', 500);
+
+            // Spawn emoji explosion from center
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const emoji = document.createElement('div');
+                    const angle = (Math.PI * 2 * i) / 50 + Math.random() * 0.5;
+                    const distance = 200 + Math.random() * 400;
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance - 100;
+                    
+                    emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    emoji.style.cssText = `
+                        position: fixed;
+                        left: 50%;
+                        top: 50%;
+                        font-size: ${30 + Math.random() * 40}px;
+                        z-index: 10000;
+                        pointer-events: none;
+                        --tx: ${tx}px;
+                        --ty: ${ty}px;
+                        --rot: ${Math.random() * 720 - 360}deg;
+                        animation: emojiExplode 1.5s ease-out forwards;
+                    `;
+                    document.body.appendChild(emoji);
+                    setTimeout(() => emoji.remove(), 1500);
+                }, i * 20);
+            }
+
+            // Multiple confetti bursts
+            const burstCount = 5;
+            for (let i = 0; i < burstCount; i++) {
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 100,
+                        spread: 360,
+                        origin: { x: Math.random(), y: Math.random() * 0.5 + 0.25 },
+                        colors: ['#00f5ff', '#ff00ff', '#b366ff', '#00ff88', '#ffff00', '#ff6b6b'],
+                        ticks: 300,
+                        gravity: 0.8,
+                        scalar: 1.2
+                    });
+                }, i * 200);
+            }
+
+            // Console message
+            console.log('%c🎮 KONAMI CODE ACTIVATED! 🎮', 'font-size: 24px; color: #ff00ff; text-shadow: 0 0 10px #00f5ff;');
+            console.log('%c↑↑↓↓←→←→BA', 'font-size: 16px; color: #00f5ff;');
+        }
+
         // Base URL for fetching markdown from GitHub
         const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/dotnet-presentations/vscode-github-copilot-agent-lab/main/.lab/';
 
