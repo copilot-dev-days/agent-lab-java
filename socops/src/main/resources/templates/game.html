@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Soc Ops — Social Bingo</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+    <link rel="icon" type="image/png" th:href="@{/favicon.png}"/>
+    <style>
+        /* active-state tweaks that need pseudo-class selectors */
+        .tile-active:active { background-color: #f3f4f6 !important; }
+        .accent-active:active { background-color: #3b82f6 !important; }
+    </style>
+</head>
+<body class="h-full">
+
+<!-- ============================================================= -->
+<!--  LOBBY — visible before a game starts                          -->
+<!-- ============================================================= -->
+<div id="lobbyView" class="flex flex-col items-center justify-center min-h-full p-6 bg-gray-50">
+    <div class="text-center max-w-sm">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">Soc Ops</h1>
+        <p class="text-lg text-gray-600 mb-8">Social Bingo</p>
+
+        <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 mb-8">
+            <h2 class="font-semibold text-gray-800 mb-3">How to play</h2>
+            <ul class="text-left text-gray-600 text-sm space-y-2">
+                <li>• Find people who match the questions</li>
+                <li>• Tap a square when you find a match</li>
+                <li>• Get 5 in a row to win!</li>
+            </ul>
+        </div>
+
+        <button onclick="launchGame()"
+                class="w-full bg-accent text-white font-semibold py-4 px-8 rounded-lg text-lg accent-active transition-colors">
+            Start Game
+        </button>
+    </div>
+</div>
+
+<!-- ============================================================= -->
+<!--  ACTIVE GAME — board, header, optional bingo banner            -->
+<!-- ============================================================= -->
+<div id="activeView" class="flex flex-col min-h-full bg-gray-50" style="display:none">
+
+    <!-- top bar -->
+    <header class="flex items-center justify-between p-3 bg-white border-b border-gray-200">
+        <button onclick="retreatToLobby()"
+                class="text-gray-500 text-sm px-3 py-1\.5 rounded tile-active">
+            &#8592; Back
+        </button>
+        <h1 class="font-bold text-gray-900">Soc Ops</h1>
+        <div class="w-16"></div>
+    </header>
+
+    <!-- hint -->
+    <p class="text-center text-gray-500 text-sm py-2 px-4">
+        Tap a square when you find someone who matches it.
+    </p>
+
+    <!-- bingo banner (hidden until victory) -->
+    <div id="bingoBanner"
+         class="bg-amber-100 text-amber-800 text-center py-2 font-semibold text-sm"
+         style="display:none">
+        &#127881; BINGO! You got a line!
+    </div>
+
+    <!-- the 5×5 grid -->
+    <div class="flex-1 flex items-center justify-center p-3">
+        <div id="gridContainer"
+             class="grid grid-cols-5 gap-1 w-full max-w-md mx-auto aspect-square">
+            <!-- tiles injected by JS -->
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================= -->
+<!--  VICTORY MODAL — overlays the board                            -->
+<!-- ============================================================= -->
+<div id="victoryOverlay"
+     class="fixed inset-0 bg-black\/50 flex items-center justify-center p-4 z-50"
+     style="display:none">
+    <div class="bg-white rounded-xl p-6 max-w-xs w-full text-center shadow-xl animate-[bounce_0.5s_ease-out]">
+        <div class="text-5xl mb-4">&#127881;</div>
+        <h2 class="text-3xl font-bold text-amber-500 mb-2">BINGO!</h2>
+        <p class="text-gray-600 mb-6">You completed a line!</p>
+        <button onclick="dismissVictoryModal()"
+                class="w-full bg-accent text-white font-semibold py-3 px-6 rounded-lg accent-active transition-colors">
+            Keep Playing
+        </button>
+    </div>
+</div>
+
+<!-- ============================================================= -->
+<!--  Client-side game engine                                       -->
+<!-- ============================================================= -->
+<script>
+(function () {
+    "use strict";
+
+    var SIDE = 5;
+    var TOTAL_CELLS = SIDE * SIDE;
+    var PERSIST_KEY = "socops-bingo-snapshot";
+
+    /* ── state ────────────────────────────────────────────────── */
+    var liveTiles   = [];          /* Array of BingoCell objects  */
+    var streakFound = null;        /* WinningStreak or null       */
+    var modalShown  = false;
+    var currentPhase = "LOBBY";    /* LOBBY | ACTIVE | VICTORY    */
+
+    /* ── DOM refs ─────────────────────────────────────────────── */
+    var lobbyDiv   = document.getElementById("lobbyView");
+    var activeDiv  = document.getElementById("activeView");
+    var gridDiv    = document.getElementById("gridContainer");
+    var bannerDiv  = document.getElementById("bingoBanner");
+    var overlayDiv = document.getElementById("victoryOverlay");
+
+    /* ── phase switching ──────────────────────────────────────── */
+    function showPhase(phase) {
+        currentPhase = phase;
+        lobbyDiv.style.display   = (phase === "LOBBY") ? "" : "none";
+        activeDiv.style.display  = (phase !== "LOBBY") ? "" : "none";
+        bannerDiv.style.display  = (streakFound)       ? "" : "none";
+        overlayDiv.style.display = (modalShown)        ? "" : "none";
+    }
+
+    /* ── board rendering ──────────────────────────────────────── */
+    function paintGrid() {
+        gridDiv.innerHTML = "";
+        var winIds = streakFound ? gatherStreakIds(streakFound) : {};
+
+        for (var t = 0; t < liveTiles.length; t++) {
+            var tile = liveTiles[t];
+            var btn = document.createElement("button");
+
+            /* base styling identical to the original Blazor BingoSquare */
+            var base = "relative flex items-center justify-center p-1 text-center " +
+                       "border border-gray-300 rounded transition-all duration-150 " +
+                       "select-none min-h-[60px] text-xs leading-tight";
+
+            var state;
+            if (tile.selected) {
+                state = winIds[tile.id]
+                    ? "bg-amber-200 border-amber-400 text-amber-900"
+                    : "bg-marked border-marked-border text-green-800";
+            } else {
+                state = "bg-white text-gray-700 tile-active";
+            }
+
+            var extra = tile.freeCell ? " font-bold text-sm" : "";
+            btn.className = base + " " + state + extra;
+
+            if (tile.freeCell) { btn.disabled = true; }
+            btn.setAttribute("aria-pressed", String(tile.selected));
+            btn.setAttribute("aria-label", tile.freeCell ? "Free space" : tile.prompt);
+
+            /* inner label */
+            var labelSpan = document.createElement("span");
+            labelSpan.className = "wrap-break-word hyphens-auto";
+            labelSpan.textContent = tile.prompt;
+            btn.appendChild(labelSpan);
+
+            /* check-mark for marked non-free tiles */
+            if (tile.selected && !tile.freeCell) {
+                var tick = document.createElement("span");
+                tick.className = "absolute top-0.5 right-0.5 text-green-600 text-xs";
+                tick.textContent = "\u2713";
+                btn.appendChild(tick);
+            }
+
+            /* click handler (closure over tile id) */
+            btn.addEventListener("click", (function (cid) {
+                return function () { onTileTapped(cid); };
+            })(tile.id));
+
+            gridDiv.appendChild(btn);
+        }
+    }
+
+    /* ── tile tap logic ───────────────────────────────────────── */
+    function onTileTapped(cellId) {
+        liveTiles = flipTile(liveTiles, cellId);
+
+        if (!streakFound) {
+            var detected = scanForStreak(liveTiles);
+            if (detected) {
+                streakFound = detected;
+                currentPhase = "VICTORY";
+                modalShown = true;
+            }
+        }
+        persistSnapshot();
+        paintGrid();
+        bannerDiv.style.display  = streakFound ? "" : "none";
+        overlayDiv.style.display = modalShown  ? "" : "none";
+    }
+
+    /* ── board manipulation (mirrors BoardAssembler.java) ─────── */
+    function flipTile(board, cellId) {
+        return board.map(function (c) {
+            if (c.id === cellId && !c.freeCell) {
+                return { id: c.id, prompt: c.prompt, selected: !c.selected, freeCell: false };
+            }
+            return c;
+        });
+    }
+
+    /* ── victory scanning (mirrors detectWinningStreak) ───────── */
+    function scanForStreak(board) {
+        var r, c, positions, i;
+
+        /* rows */
+        for (r = 0; r < SIDE; r++) {
+            positions = [];
+            for (c = 0; c < SIDE; c++) { positions.push(r * SIDE + c); }
+            if (lineComplete(board, positions)) {
+                return { direction: "row", index: r, cellPositions: positions };
+            }
+        }
+
+        /* columns */
+        for (c = 0; c < SIDE; c++) {
+            positions = [];
+            for (r = 0; r < SIDE; r++) { positions.push(r * SIDE + c); }
+            if (lineComplete(board, positions)) {
+                return { direction: "column", index: c, cellPositions: positions };
+            }
+        }
+
+        /* main diagonal */
+        positions = [];
+        for (i = 0; i < SIDE; i++) { positions.push(i * SIDE + i); }
+        if (lineComplete(board, positions)) {
+            return { direction: "diagonal", index: 0, cellPositions: positions };
+        }
+
+        /* anti diagonal */
+        positions = [];
+        for (i = 0; i < SIDE; i++) { positions.push(i * SIDE + (SIDE - 1 - i)); }
+        if (lineComplete(board, positions)) {
+            return { direction: "diagonal", index: 1, cellPositions: positions };
+        }
+
+        return null;
+    }
+
+    function lineComplete(board, positions) {
+        for (var k = 0; k < positions.length; k++) {
+            if (!board[positions[k]].selected) { return false; }
+        }
+        return true;
+    }
+
+    function gatherStreakIds(streak) {
+        var lookup = {};
+        for (var j = 0; j < streak.cellPositions.length; j++) {
+            lookup[streak.cellPositions[j]] = true;
+        }
+        return lookup;
+    }
+
+    /* ── localStorage persistence ─────────────────────────────── */
+    function persistSnapshot() {
+        try {
+            var blob = JSON.stringify({
+                phase: currentPhase,
+                tiles: liveTiles,
+                streak: streakFound,
+                modal: modalShown
+            });
+            localStorage.setItem(PERSIST_KEY, blob);
+        } catch (_) { /* storage full or unavailable */ }
+    }
+
+    function restoreSnapshot() {
+        try {
+            var raw = localStorage.getItem(PERSIST_KEY);
+            if (!raw) { return false; }
+            var snap = JSON.parse(raw);
+            if (!snap.tiles || snap.tiles.length !== TOTAL_CELLS) { return false; }
+            liveTiles   = snap.tiles;
+            streakFound = snap.streak || null;
+            modalShown  = !!snap.modal;
+            currentPhase = snap.phase || "ACTIVE";
+            return currentPhase !== "LOBBY";
+        } catch (_) { return false; }
+    }
+
+    /* ── public API (called from onclick attrs) ───────────────── */
+    window.launchGame = function () {
+        fetch("/api/bingo/fresh-board")
+            .then(function (resp) { return resp.json(); })
+            .then(function (cells) {
+                liveTiles   = cells;
+                streakFound = null;
+                modalShown  = false;
+                currentPhase = "ACTIVE";
+                persistSnapshot();
+                paintGrid();
+                showPhase("ACTIVE");
+            });
+    };
+
+    window.retreatToLobby = function () {
+        liveTiles   = [];
+        streakFound = null;
+        modalShown  = false;
+        currentPhase = "LOBBY";
+        persistSnapshot();
+        showPhase("LOBBY");
+    };
+
+    window.dismissVictoryModal = function () {
+        modalShown = false;
+        overlayDiv.style.display = "none";
+        persistSnapshot();
+    };
+
+    /* ── boot ─────────────────────────────────────────────────── */
+    if (restoreSnapshot()) {
+        paintGrid();
+        showPhase(currentPhase);
+    } else {
+        showPhase("LOBBY");
+    }
+})();
+</script>
+
+</body>
+</html>

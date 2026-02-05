@@ -1,0 +1,8 @@
+com/socops/data/IcebreakerPrompts.class
+com/socops/service/BoardAssembler.class
+com/socops/model/BingoCell$IcebreakerLabel.class
+com/socops/web/BingoRestController.class
+com/socops/SocOpsApplication.class
+com/socops/model/BingoCell.class
+com/socops/model/WinningStreak.class
+com/socops/model/PlayPhase.class

@@ -1,0 +1,7 @@
+/home/runner/work/vscode-github-copilot-agent-lab/vscode-github-copilot-agent-lab/socops/src/main/java/com/socops/SocOpsApplication.java
+/home/runner/work/vscode-github-copilot-agent-lab/vscode-github-copilot-agent-lab/socops/src/main/java/com/socops/data/IcebreakerPrompts.java
+/home/runner/work/vscode-github-copilot-agent-lab/vscode-github-copilot-agent-lab/socops/src/main/java/com/socops/model/BingoCell.java
+/home/runner/work/vscode-github-copilot-agent-lab/vscode-github-copilot-agent-lab/socops/src/main/java/com/socops/model/PlayPhase.java
+/home/runner/work/vscode-github-copilot-agent-lab/vscode-github-copilot-agent-lab/socops/src/main/java/com/socops/model/WinningStreak.java
+/home/runner/work/vscode-github-copilot-agent-lab/vscode-github-copilot-agent-lab/socops/src/main/java/com/socops/service/BoardAssembler.java
+/home/runner/work/vscode-github-copilot-agent-lab/vscode-github-copilot-agent-lab/socops/src/main/java/com/socops/web/BingoRestController.java

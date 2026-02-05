@@ -1,0 +1,51 @@
+#!/bin/sh
+# Soc Ops Maven Wrapper bootstrap
+# Resolves the wrapper jar and delegates to it
+
+set -e
+
+SOC_OPS_BASE_DIR=$(cd "$(dirname "$0")" && pwd)
+WRAPPER_PROPS="$SOC_OPS_BASE_DIR/.mvn/wrapper/maven-wrapper.properties"
+WRAPPER_JAR="$SOC_OPS_BASE_DIR/.mvn/wrapper/maven-wrapper.jar"
+
+read_dist_url() {
+    while IFS='=' read -r propKey propVal; do
+        case "$propKey" in
+            distributionUrl) echo "$propVal"; return ;;
+        esac
+    done < "$WRAPPER_PROPS"
+}
+
+read_wrapper_url() {
+    while IFS='=' read -r propKey propVal; do
+        case "$propKey" in
+            wrapperUrl) echo "$propVal"; return ;;
+        esac
+    done < "$WRAPPER_PROPS"
+}
+
+fetch_wrapper_if_absent() {
+    if [ ! -f "$WRAPPER_JAR" ]; then
+        wrapperFetchUrl=$(read_wrapper_url)
+        echo "Downloading Maven Wrapper from: $wrapperFetchUrl"
+        if command -v curl > /dev/null 2>&1; then
+            curl -fsSL -o "$WRAPPER_JAR" "$wrapperFetchUrl"
+        elif command -v wget > /dev/null 2>&1; then
+            wget -q -O "$WRAPPER_JAR" "$wrapperFetchUrl"
+        else
+            echo "ERROR: Neither curl nor wget found. Install one to use mvnw." >&2
+            exit 1
+        fi
+    fi
+}
+
+fetch_wrapper_if_absent
+
+DIST_URL=$(read_dist_url)
+export MAVEN_OPTS="${MAVEN_OPTS:-}"
+
+exec java \
+    $MAVEN_OPTS \
+    -jar "$WRAPPER_JAR" \
+    "--dist-url=$DIST_URL" \
+    "$@"
