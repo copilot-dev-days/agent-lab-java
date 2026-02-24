@@ -55,16 +55,3 @@ Before you begin, verify:
 3. **Use checkpoints** — Revert unexpected changes with chat Checkpoints & Undo
 4. **📌 Pin this guide** — Keep it visible while you work
 
----
-
-## 🚀 Ready?
-
-👉 **[Start with Part 1: Setup](01-setup.md)**
-
----
-
----
-
-[📚 Lab Guide](https://copilot-dev-days.github.io/agent-lab-java/docs/) • [← README](../README.md)
-
-*Created for Java developers by the VS Code and Java teams*

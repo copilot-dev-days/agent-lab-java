@@ -131,9 +131,3 @@ You've learned how to:
 - Iterate on plans before implementing
 - Keep instructions updated with changes
 - Scale exploration with parallel cloud agents
-
----
-
-[📚 Lab Guide](https://copilot-dev-days.github.io/agent-lab-java/docs/) • [← Part 1](01-setup.md)
-
-👉 **[Continue to Part 3: Custom Quiz Master →](03-quiz-master.md)**
