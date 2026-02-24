@@ -51,7 +51,7 @@ public static final List<String> ALL_PROMPTS = List.of(
 ```
 
 ### Workshop Guide
-👉 Follow the [Lab Guide](.lab/GUIDE.md) for a hands-on workshop experience with GitHub Copilot agents.
+👉 Follow the [Lab Guide](workshop/GUIDE.md) for a hands-on workshop experience with GitHub Copilot agents.
 
 ## 🛠️ Tech Stack
 

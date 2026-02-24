@@ -3,7 +3,7 @@
 Social Bingo game for in-person mixers. Find people who match the questions and get 5 in a row!
 
 <!-- You can remove this message when updating the readme as part of the workshop -->
-👉 **[Follow the Lab Guide](.lab/GUIDE.md)** for instructions on how to set up and customize the game.
+👉 **[Follow the Lab Guide](workshop/GUIDE.md)** for instructions on how to set up and customize the game.
 
 
 ## Prerequisites
