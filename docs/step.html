@@ -337,6 +337,11 @@
 
                 document.getElementById('markdown-content').innerHTML = marked.parse(md);
 
+                // Enable markdown task-list checkboxes for interaction
+                document.querySelectorAll('.markdown input[type="checkbox"]').forEach((checkbox) => {
+                    checkbox.disabled = false;
+                });
+
                 // If this is the completion page, add confetti!
                 if (step.id === '05-complete') {
                     // Trigger celebration on load
