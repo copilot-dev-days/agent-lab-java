@@ -10,6 +10,7 @@
             --border-color: #2a2a3a;
             --success-green: #4ec9b0;
             --warning-yellow: #dcdcaa;
+            --code-copy-bg: rgba(10, 10, 15, 0.85);
         }
 
         * {
@@ -353,9 +354,9 @@
             right: 0.75rem;
             border: 1px solid var(--border-color);
             border-radius: 999px;
-            background: rgba(10, 10, 15, 0.85);
+            background: var(--code-copy-bg);
             color: var(--text-secondary);
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: inherit;
             font-size: 0.75rem;
             font-weight: 700;
             letter-spacing: 0.04em;

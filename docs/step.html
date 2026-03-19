@@ -307,7 +307,11 @@
         const copyButtonResetTimers = new WeakMap();
 
         function resetCopyButton(button) {
-            window.clearTimeout(copyButtonResetTimers.get(button));
+            const existingTimerId = copyButtonResetTimers.get(button);
+            if (existingTimerId) {
+                window.clearTimeout(existingTimerId);
+            }
+
             const timerId = window.setTimeout(() => {
                 button.textContent = 'Copy';
                 button.dataset.copyState = 'idle';
@@ -335,7 +339,7 @@
 
             try {
                 if (!document.execCommand('copy')) {
-                    throw new Error('Copy command was unsuccessful');
+                    throw new Error('Copy command was unsuccessful in the fallback clipboard path');
                 }
             } finally {
                 document.body.removeChild(textArea);
