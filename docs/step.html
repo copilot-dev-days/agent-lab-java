@@ -304,12 +304,15 @@
             return md;
         }
 
+        const copyButtonResetTimers = new WeakMap();
+
         function resetCopyButton(button) {
-            window.clearTimeout(button.resetTimer);
-            button.resetTimer = window.setTimeout(() => {
+            window.clearTimeout(copyButtonResetTimers.get(button));
+            const timerId = window.setTimeout(() => {
                 button.textContent = 'Copy';
                 button.dataset.copyState = 'idle';
             }, 2000);
+            copyButtonResetTimers.set(button, timerId);
         }
 
         async function copyText(text) {
@@ -327,7 +330,9 @@
             textArea.select();
 
             try {
-                document.execCommand('copy');
+                if (!document.execCommand('copy')) {
+                    throw new Error('Copy command was unsuccessful');
+                }
             } finally {
                 document.body.removeChild(textArea);
             }
