@@ -316,9 +316,13 @@
         }
 
         async function copyText(text) {
-            if (navigator.clipboard?.writeText && window.isSecureContext) {
-                await navigator.clipboard.writeText(text);
-                return;
+            if (navigator.clipboard?.writeText) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return;
+                } catch (error) {
+                    // Fall back below when the Clipboard API is unavailable or denied.
+                }
             }
 
             const textArea = document.createElement('textarea');
