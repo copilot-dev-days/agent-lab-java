@@ -10,6 +10,8 @@
             --border-color: #2a2a3a;
             --success-green: #4ec9b0;
             --warning-yellow: #dcdcaa;
+            --code-copy-bg: rgba(10, 10, 15, 0.85);
+            --code-copy-offset: 2.75rem;
         }
 
         * {
@@ -335,15 +337,53 @@
             background: var(--bg-code);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 1.25rem;
+            padding: var(--code-copy-offset) 1.25rem 1.25rem;
             overflow-x: auto;
             margin: 1.5rem 0;
+            position: relative;
         }
 
         .markdown pre code {
             color: var(--text-primary);
             background: none;
             padding: 0;
+        }
+
+        .code-copy-button {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            background: var(--code-copy-bg);
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 0.35rem 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .code-copy-button:hover,
+        .code-copy-button:focus-visible {
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        .code-copy-button[data-copy-state="copied"] {
+            border-color: var(--success-green);
+            color: var(--success-green);
+        }
+
+        .code-copy-button[data-copy-state="error"] {
+            border-color: var(--neon-magenta);
+            color: var(--neon-magenta);
         }
 
         /* Blockquotes / Tips */

@@ -304,6 +304,88 @@
             return md;
         }
 
+        const resetTimers = new WeakMap();
+
+        function resetCopyButton(button) {
+            const existingTimerId = resetTimers.get(button);
+            if (existingTimerId) {
+                window.clearTimeout(existingTimerId);
+            }
+
+            const timerId = window.setTimeout(() => {
+                button.textContent = 'Copy';
+                button.setAttribute('aria-label', 'Copy code block');
+                button.dataset.copyState = 'idle';
+            }, 2000);
+            resetTimers.set(button, timerId);
+        }
+
+        async function copyText(text) {
+            if (navigator.clipboard?.writeText) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return;
+                } catch (error) {
+                    // Fall back below when the Clipboard API is unavailable or denied.
+                }
+            }
+
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.setAttribute('readonly', '');
+            textArea.style.position = 'absolute';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+
+            try {
+                if (!document.execCommand('copy')) {
+                    throw new Error('Failed to copy code to clipboard');
+                }
+            } finally {
+                document.body.removeChild(textArea);
+            }
+        }
+
+        function enhanceCodeBlocks() {
+            document.querySelectorAll('#markdown-content pre code').forEach((code) => {
+                const pre = code.parentElement;
+                if (!pre || pre.querySelector('.code-copy-button')) {
+                    return;
+                }
+
+                const text = code?.textContent?.trimEnd();
+                if (!text) {
+                    return;
+                }
+
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'code-copy-button';
+                button.textContent = 'Copy';
+                button.dataset.copyState = 'idle';
+                button.setAttribute('aria-label', 'Copy code block');
+                button.setAttribute('aria-live', 'polite');
+
+                button.addEventListener('click', async () => {
+                    try {
+                        await copyText(text);
+                        button.textContent = 'Copied!';
+                        button.setAttribute('aria-label', 'Code copied');
+                        button.dataset.copyState = 'copied';
+                    } catch (error) {
+                        button.textContent = 'Failed';
+                        button.setAttribute('aria-label', 'Copy failed');
+                        button.dataset.copyState = 'error';
+                    }
+
+                    resetCopyButton(button);
+                });
+
+                pre.appendChild(button);
+            });
+        }
+
         // Load and render markdown
         async function loadContent() {
             const idx = getCurrentStepIndex();
@@ -341,6 +423,8 @@
                 document.querySelectorAll('.markdown input[type="checkbox"]').forEach((checkbox) => {
                     checkbox.disabled = false;
                 });
+
+                enhanceCodeBlocks();
 
                 // If this is the completion page, add confetti!
                 if (step.id === '05-complete') {
