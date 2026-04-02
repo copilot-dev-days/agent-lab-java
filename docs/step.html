@@ -512,10 +512,10 @@
       var t=li.dataset.locale==='pt-BR'?'pt_BR':li.dataset.locale;
       if(t===locale){close();return;}
       var p=location.pathname;
-      if(locale!=='en')p=p.replace(new RegExp('/'+locale+'/'),'/');;
-      if(t!=='en'){var base=p.replace(/\/index\.html$/,'/');if(!base.endsWith('/'))base+='/';p=base+t+'/';}
+      if(locale!=='en')p=p.replace(new RegExp('/'+locale+'/'),'/');
+      if(t!=='en'){var ls=p.lastIndexOf('/');p=p.substring(0,ls+1)+t+p.substring(ls);}
       localStorage.setItem('preferred-locale',t);
-      window.location.href=p;
+      window.location.href=p+location.search;
     });
   });
 })();
