@@ -33,10 +33,11 @@
 ## 🚀 Configuração Rápida
 
 ```
-# 1. Use o template em github.com/copilot-dev-days/agent-lab-java
-# 2. Ative o GitHub Pages (Settings > Pages > GitHub Actions)
-# 3. Clone no VS Code
-# 4. Execute /setup no Chat
+# 1. Open template: github.com/copilot-dev-days/agent-lab-java
+# 2. Create your own repository from the template
+# 3. Enable GitHub Pages (Settings > Pages > GitHub Actions)
+# 4. Choose one: clone your repo locally OR create a Codespace on your repo
+# 5. Run /setup in Chat
 ```
 
 ---

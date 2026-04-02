@@ -27,12 +27,23 @@ Nesta seção, você vai configurar seu ambiente de desenvolvimento e ensinar o 
 2. Em "Build and deployment", selecione **GitHub Actions**
 3. ✅ Cada commit agora será publicado em: `https://{username}.github.io/{repo-name}`
 
-### Passo 3: Clone & Abra no VS Code
+### Passo 3: Escolha Como Você Vai Trabalhar (Clone Local ou Codespace)
+
+Depois de criar seu próprio repositório, escolha uma opção:
+
+#### Opção A: Clone Localmente no VS Code
 
 1. Abra o VS Code
 2. Execute o comando: `Git: Clone` → `Clone from GitHub`
-3. Selecione seu novo repositório
+3. Selecione **seu novo repositório** (não o repositório do template)
 4. Quando solicitado, instale as **extensões recomendadas**
+
+#### Opção B: Crie um Codespace para Seu Repositório
+
+1. Abra **seu novo repositório** no GitHub
+2. Clique em **Code** → **Codespaces**
+3. Clique em **Create codespace on main**
+4. Aguarde a configuração terminar
 
 ### Passo 4: Execute o Agente de Configuração
 
