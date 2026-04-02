@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-LSC44NDPLQ"></script>
@@ -20,9 +20,9 @@
     <link rel="alternate" hreflang="pt-BR" href="https://copilot-dev-days.github.io/agent-lab-java/pt_BR/">
     <link rel="alternate" hreflang="es" href="https://copilot-dev-days.github.io/agent-lab-java/es/">
     <link rel="alternate" hreflang="x-default" href="https://copilot-dev-days.github.io/agent-lab-java/">
-    <link rel="stylesheet" href="step.css">
-    <link rel="stylesheet" href="light-theme.css">
-    <script src="theme-toggle.js"></script>
+    <link rel="stylesheet" href="../step.css">
+    <link rel="stylesheet" href="../light-theme.css">
+    <script src="../theme-toggle.js"></script>
 </head>
 <body>
     <header class="header">
@@ -33,16 +33,16 @@
             </a>
             <nav class="header-nav">
                 <div class="locale-picker" id="localePicker">
-                    <button type="button" class="locale-toggle" aria-haspopup="listbox" aria-expanded="false" aria-label="Select language">🌐</button>
-                    <ul role="listbox" aria-label="Language">
-                        <li role="option" data-locale="en" aria-selected="true" class="active">🇬🇧 English</li>
+                    <button type="button" class="locale-toggle" aria-haspopup="listbox" aria-expanded="false" aria-label="Selecionar idioma">🌐</button>
+                    <ul role="listbox" aria-label="Idioma">
+                        <li role="option" data-locale="en" aria-selected="false">🇬🇧 English</li>
                         <li role="option" data-locale="es" aria-selected="false">🇪🇸 Español</li>
-                        <li role="option" data-locale="pt-BR" aria-selected="false">🇧🇷 Português (Brasil)</li>
+                        <li role="option" data-locale="pt-BR" aria-selected="true" class="active">🇧🇷 Português (Brasil)</li>
                     </ul>
                 </div>
-                <button class="theme-toggle" onclick="toggleTheme()">☀️ Light</button>
-                <button class="nav-btn" id="prevBtn" disabled>← Previous</button>
-                <button class="nav-btn" id="nextBtn">Next →</button>
+                <button class="theme-toggle" onclick="toggleTheme()">☀️ Claro</button>
+                <button class="nav-btn" id="prevBtn" disabled>← Anterior</button>
+                <button class="nav-btn" id="nextBtn">Próximo →</button>
             </nav>
         </div>
     </header>
@@ -50,7 +50,7 @@
     <div class="layout">
         <aside class="sidebar">
             <div class="sidebar-section">
-                <div class="sidebar-title">Lab Parts</div>
+                <div class="sidebar-title">Partes do Lab</div>
                 <nav id="stepNav"></nav>
             </div>
         </aside>
@@ -58,11 +58,11 @@
         <main class="main">
             <article class="content">
                 <div id="markdown-content" class="markdown">
-                    <div class="loading">Loading content</div>
+                    <div class="loading">Carregando conteúdo</div>
                 </div>
                 <nav class="nav-footer">
-                    <a href="#" class="nav-footer-btn disabled" id="prevLink">← Previous</a>
-                    <a href="#" class="nav-footer-btn" id="nextLink">Next →</a>
+                    <a href="#" class="nav-footer-btn disabled" id="prevLink">← Anterior</a>
+                    <a href="#" class="nav-footer-btn" id="nextLink">Próximo →</a>
                 </nav>
             </article>
         </main>
@@ -72,13 +72,13 @@
     <script>
         // Define all steps in order
         const steps = [
-            { id: 'guide', file: 'GUIDE.md', title: 'Quick Reference', number: '📚' },
-            { id: '00-overview', file: '00-overview.md', title: 'Overview & Checklist', number: '00' },
-            { id: '01-setup', file: '01-setup.md', title: 'Setup & Context Engineering', number: '01' },
-            { id: '02-design', file: '02-design.md', title: 'Design-First Frontend', number: '02' },
-            { id: '03-quiz-master', file: '03-quiz-master.md', title: 'Custom Quiz Master', number: '03' },
-            { id: '04-multi-agent', file: '04-multi-agent.md', title: 'Multi-Agent Development', number: '04' },
-            { id: '05-complete', file: '05-complete.md', title: '🎉 Complete!', number: '🎉' },
+            { id: 'guide', file: 'GUIDE.md', title: 'Referência Rápida', number: '📚' },
+            { id: '00-overview', file: '00-overview.md', title: 'Visão Geral & Checklist', number: '00' },
+            { id: '01-setup', file: '01-setup.md', title: 'Configuração & Engenharia de Contexto', number: '01' },
+            { id: '02-design', file: '02-design.md', title: 'Frontend Design-First', number: '02' },
+            { id: '03-quiz-master', file: '03-quiz-master.md', title: 'Quiz Master Personalizado', number: '03' },
+            { id: '04-multi-agent', file: '04-multi-agent.md', title: 'Desenvolvimento Multi-Agente', number: '04' },
+            { id: '05-complete', file: '05-complete.md', title: '🎉 Completo!', number: '🎉' },
         ];
 
         // Confetti celebration function
@@ -228,7 +228,7 @@
         }
 
         // Base URL for fetching markdown from GitHub
-        const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/copilot-dev-days/agent-lab-java/main/workshop/';
+        const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/copilot-dev-days/agent-lab-java/main/workshop/pt_BR/';
 
         // Get current step from URL
         function getCurrentStepId() {
@@ -276,7 +276,7 @@
                 prevLink.classList.remove('disabled');
             } else {
                 prevLink.classList.add('disabled');
-                prevLink.textContent = '← Previous';
+                prevLink.textContent = '← Anterior';
             }
 
             if (idx < steps.length - 1) {
@@ -285,7 +285,7 @@
                 nextLink.classList.remove('disabled');
             } else {
                 nextLink.classList.add('disabled');
-                nextLink.textContent = 'Next →';
+                nextLink.textContent = 'Próximo →';
             }
         }
 
@@ -316,93 +316,11 @@
             return md;
         }
 
-        const resetTimers = new WeakMap();
-
-        function resetCopyButton(button) {
-            const existingTimerId = resetTimers.get(button);
-            if (existingTimerId) {
-                window.clearTimeout(existingTimerId);
-            }
-
-            const timerId = window.setTimeout(() => {
-                button.textContent = 'Copy';
-                button.setAttribute('aria-label', 'Copy code block');
-                button.dataset.copyState = 'idle';
-            }, 2000);
-            resetTimers.set(button, timerId);
-        }
-
-        async function copyText(text) {
-            if (navigator.clipboard?.writeText) {
-                try {
-                    await navigator.clipboard.writeText(text);
-                    return;
-                } catch (error) {
-                    // Fall back below when the Clipboard API is unavailable or denied.
-                }
-            }
-
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.setAttribute('readonly', '');
-            textArea.style.position = 'absolute';
-            textArea.style.left = '-9999px';
-            document.body.appendChild(textArea);
-            textArea.select();
-
-            try {
-                if (!document.execCommand('copy')) {
-                    throw new Error('Failed to copy code to clipboard');
-                }
-            } finally {
-                document.body.removeChild(textArea);
-            }
-        }
-
-        function enhanceCodeBlocks() {
-            document.querySelectorAll('#markdown-content pre code').forEach((code) => {
-                const pre = code.parentElement;
-                if (!pre || pre.querySelector('.code-copy-button')) {
-                    return;
-                }
-
-                const text = code?.textContent?.trimEnd();
-                if (!text) {
-                    return;
-                }
-
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'code-copy-button';
-                button.textContent = 'Copy';
-                button.dataset.copyState = 'idle';
-                button.setAttribute('aria-label', 'Copy code block');
-                button.setAttribute('aria-live', 'polite');
-
-                button.addEventListener('click', async () => {
-                    try {
-                        await copyText(text);
-                        button.textContent = 'Copied!';
-                        button.setAttribute('aria-label', 'Code copied');
-                        button.dataset.copyState = 'copied';
-                    } catch (error) {
-                        button.textContent = 'Failed';
-                        button.setAttribute('aria-label', 'Copy failed');
-                        button.dataset.copyState = 'error';
-                    }
-
-                    resetCopyButton(button);
-                });
-
-                pre.appendChild(button);
-            });
-        }
-
         // Load and render markdown
         async function loadContent() {
             const idx = getCurrentStepIndex();
             if (idx === -1) {
-                document.getElementById('markdown-content').innerHTML = '<p>Step not found. <a href="?step=00-overview">Go to Overview</a></p>';
+                document.getElementById('markdown-content').innerHTML = '<p>Passo não encontrado. <a href="?step=00-overview">Ir para Visão Geral</a></p>';
                 return;
             }
 
@@ -431,13 +349,6 @@
 
                 document.getElementById('markdown-content').innerHTML = marked.parse(md);
 
-                // Enable markdown task-list checkboxes for interaction
-                document.querySelectorAll('.markdown input[type="checkbox"]').forEach((checkbox) => {
-                    checkbox.disabled = false;
-                });
-
-                enhanceCodeBlocks();
-
                 // If this is the completion page, add confetti!
                 if (step.id === '05-complete') {
                     // Trigger celebration on load
@@ -460,16 +371,16 @@
                                 transition: transform 0.2s, box-shadow 0.2s;
                             " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 10px 40px rgba(0,245,255,0.4)';" 
                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
-                                🎊 More Confetti! 🎊
+                                🎊 Mais Confete! 🎊
                             </button>
                         `;
                     }
                 }
             } catch (error) {
                 document.getElementById('markdown-content').innerHTML = `
-                    <h1>Error Loading Content</h1>
-                    <p>Could not load ${step.file}. Please check your internet connection.</p>
-                    <p><a href="index.html">Return to home</a></p>
+                    <h1>Erro ao Carregar Conteúdo</h1>
+                    <p>Não foi possível carregar ${step.file}. Por favor, verifique sua conexão com a internet.</p>
+                    <p><a href="index.html">Voltar ao início</a></p>
                 `;
             }
         }
